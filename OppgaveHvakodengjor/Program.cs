@@ -15,6 +15,7 @@
             var counts = new int[range];
             double totalChar = 0.00;
             string text = "something";
+            Console.WriteLine("Skriv ett ord");
             while (!string.IsNullOrWhiteSpace(text))
             {
                 text = Console.ReadLine();
@@ -32,7 +33,12 @@
                     {
                         var character = (char)i;
                         double prosenter = counts[i] / totalChar * 100;
-                        charList.Add(new CharObject { Character = character, Count = counts[i], Prosent = prosenter });
+                        charList.Add(new CharObject
+                        {
+                            Character = character, 
+                            Count = counts[i], 
+                            Prosent = prosenter
+                        });
                     }
                 }
                 charList.Sort((a, b) => b.Prosent.CompareTo(a.Prosent));
