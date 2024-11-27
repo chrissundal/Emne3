@@ -10,7 +10,7 @@ namespace Hundehvisker
     internal class Dog
     {
         public string Name { get; private set; }
-        public string Race { get; private set; }
+        public string Breed { get; private set; }
         public string Color { get; private set; }
         public string Size { get; private set; }
         public string[] Toys { get; private set; }
@@ -20,10 +20,10 @@ namespace Hundehvisker
         public int Fun { get; private set; }
         public int Energy { get; private set; }
 
-        public Dog(string name, string race, string color, string size, string[] toys, int age, string gender, int hunger, int fun, int energy)
+        public Dog(string name, string breed, string color, string size, string[] toys, int age, string gender, int hunger, int fun, int energy)
         {
             Name = name;
-            Race = race;
+            Breed = breed;
             Color = color;
             Size = size;
             Toys = toys;
@@ -38,16 +38,17 @@ namespace Hundehvisker
         {
 
         }
-        public void Show()
+        private void Show()
         {
             string toyCollection = GetToyCollection();
             Console.WriteLine(
-                $"Navn: {Name}, Rase: {Race}, Farge: {Color}, Leker: {toyCollection}Størrelse: {Size}, Alder: {Age}, Kjønn: {Gender}");
+                $"Navn: {Name}, Rase: {Breed}, Farge: {Color}, Leker: {toyCollection}Størrelse: {Size}, Alder: {Age}, Kjønn: {Gender}");
         }
 
-        public void StatsFun()
+        private void StatsFun(int labelWidth)
         {
             var funBar = "";
+            string funLabel = "Gøy";
             for (int i = 0; i < Fun; i++)
             {
                 funBar += "\u2593\u2593";
@@ -57,7 +58,7 @@ namespace Hundehvisker
             {
                 Console.ForegroundColor = ConsoleColor.Green;
             }
-            else if (Fun < 3)
+            else if (Fun <= 3)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
             }
@@ -65,12 +66,15 @@ namespace Hundehvisker
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
             }
-            Console.WriteLine($"Gøy: {funBar}{Fun * 10}%");
+
+            labelWidth -= funLabel.Length;
+            Console.WriteLine(funLabel + ":" + String.Empty.PadLeft(labelWidth, ' ') + funBar + Fun * 10+"%");
             
         }
-        public void StatsEnergy()
+        private void StatsEnergy(int labelWidth)
         {
             var energyBar = "";
+            string energyLabel = "Energi";
             for (int i = 0; i < Energy; i++)
             {
                 energyBar += "\u2593\u2593";
@@ -80,7 +84,7 @@ namespace Hundehvisker
             {
                 Console.ForegroundColor = ConsoleColor.Green;
             }
-            else if (Energy < 3)
+            else if (Energy <= 3)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
             }
@@ -88,11 +92,13 @@ namespace Hundehvisker
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
             }
-            Console.WriteLine($"Energi: {energyBar}{Energy * 10}%");
-            
+            labelWidth -= energyLabel.Length;
+            Console.WriteLine(energyLabel + ":" + String.Empty.PadLeft(labelWidth, ' ') + energyBar + Energy * 10 + "%");
+
         }
-        public void StatsHunger()
+        private void StatsHunger(int labelWidth)
         {
+            string hungerLabel = "Mat";
             var hungerBar = "";
             for (int i = 0; i < Hunger; i++)
             {
@@ -103,7 +109,7 @@ namespace Hundehvisker
             {
                 Console.ForegroundColor = ConsoleColor.Green;
             }
-            else if (Hunger < 3)
+            else if (Hunger <= 3)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
             }
@@ -111,9 +117,11 @@ namespace Hundehvisker
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
             }
-            Console.WriteLine($"Mat: {hungerBar}{Hunger * 10}%");
+            
+            labelWidth -= hungerLabel.Length;
+            Console.WriteLine(hungerLabel + ":" + String.Empty.PadLeft(labelWidth, ' ') + hungerBar + Hunger * 10 + "%");
         }
-        public string GetToyCollection()
+        private string GetToyCollection()
         {
             string toyCollection = "";
             for (int i = 0; i < Toys.Length; i++)
@@ -126,7 +134,7 @@ namespace Hundehvisker
             return toyCollection;
         }
 
-        public void Sleep()
+        private void Sleep()
         {
             if (Energy < 10)
             {
@@ -141,7 +149,7 @@ namespace Hundehvisker
                 Console.WriteLine($"{Name} har ikke lyst til å sove nå...");
             }
         }
-        public void Eat()
+        private void Eat()
         {
             if (Hunger < 10)
             {
@@ -151,7 +159,11 @@ namespace Hundehvisker
                 {
                     Energy += 2;
                 }
-            Console.WriteLine($"{Name} synes det var godt med mat.");
+                else if (Energy > 100)
+                {
+                    Energy = 100;
+                }
+                Console.WriteLine($"{Name} synes det var godt med mat.");
             }
             else
             {
@@ -160,7 +172,7 @@ namespace Hundehvisker
             }
         }
 
-        public void Play()
+        private void Play()
         {
             Console.WriteLine($"Hvilken leke skal {Name} leke med?\n");
             for (int i = 0; i < Toys.Length; i++)
@@ -214,7 +226,7 @@ namespace Hundehvisker
             }
         }
 
-        public void Treat()
+        private void Treat()
         {
             Console.WriteLine("Hvordan godbit vil du gi?");
             Console.WriteLine("1.Bein");
@@ -274,7 +286,7 @@ namespace Hundehvisker
 
         public void Run()
         {
-            
+            var labelWidth = 8;
             var exit = false;
             var start = true;
             var dog1 = new Dog("Fido", "Pitbull", "Svart", "Stor", ["Ball", "Bein", "Tau"], 10, "han", 5, 5, 5);
@@ -308,9 +320,9 @@ namespace Hundehvisker
                     Console.WriteLine($"Du har valgt: {selectedDog.Name}");
                     start = false;
                 }
-                selectedDog.StatsHunger();
-                selectedDog.StatsEnergy();
-                selectedDog.StatsFun();
+                selectedDog.StatsHunger(labelWidth);
+                selectedDog.StatsEnergy(labelWidth);
+                selectedDog.StatsFun(labelWidth);
                 Console.ResetColor();
                 Menu();
                 var inputNumber = Console.ReadLine();
@@ -354,7 +366,7 @@ namespace Hundehvisker
             
         }
 
-        public void DogChoices(Dog dog1, Dog dog2, Dog dog3)
+        private void DogChoices(Dog dog1, Dog dog2, Dog dog3)
         {
             Console.WriteLine("Velg en av hundene:");
             Console.WriteLine($"1. {dog1.Name}");
@@ -365,7 +377,7 @@ namespace Hundehvisker
             Thread.Sleep(100);
         }
 
-        public void Menu()
+        private void Menu()
         {
             Console.WriteLine("Velg ett alternativ:");
             Thread.Sleep(100);
