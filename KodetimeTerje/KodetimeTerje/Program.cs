@@ -1,0 +1,3 @@
+﻿using KodetimeTerje;
+
+View.Run();

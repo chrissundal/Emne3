@@ -1,0 +1,3 @@
+﻿using VirtualPet;
+
+new View();
