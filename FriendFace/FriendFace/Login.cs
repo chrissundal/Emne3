@@ -33,7 +33,6 @@ namespace FriendFace
                         view.SetLoggedInPerson(user);
                         user.RemoveUser(user);
                         view.Run();
-                        user.AddUser(user);
                         break;
                     }
                 }
