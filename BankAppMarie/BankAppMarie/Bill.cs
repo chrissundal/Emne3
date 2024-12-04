@@ -8,10 +8,19 @@ namespace BankAppMarie
 {
     internal class Bill
     {
-        private int _amount;
-        private string _accountNumber;
-        private string _sender;
-        private string _kidNr;
-        private DateTime _payDate;
+        public int Id { get; private set; }
+        public int Amount { get; private set; }
+        public string AccountNumber { get; private set; }
+        public string Sender { get; private set; }
+        public string KidNr { get; private set; }
+        public DateTime PayDate { get; private set; }
+
+        public Bill(int id,int billAmount, string billNum, DateTime timeToPay)
+        {
+            Id = id;
+            Amount = billAmount;
+            KidNr = billNum;
+            PayDate = timeToPay;
+        }
     }
 }

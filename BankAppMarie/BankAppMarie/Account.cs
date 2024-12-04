@@ -12,14 +12,14 @@ namespace BankAppMarie
         private string _accountName;
         private bool _savingsAccount;
         private string _accountNumber;
-        private string[] _accountTransactions;
+        private List<string> _accountTransactions;
 
         public Account(bool isSavingsAccount, string accountName)
         {
             _savingsAccount = isSavingsAccount;
             _accountName = accountName;
-            _balance = 0;
-            _accountTransactions = new string[100];
+            _balance = 100000;
+            _accountTransactions = [];
             _accountNumber = new Guid().ToString();
         }
         public void DepositMoney(int amountToDeposit)
@@ -38,6 +38,12 @@ namespace BankAppMarie
             {
                 Console.WriteLine("You dont have enough money");
             }
+        }
+
+        internal void AddNewTransaction(string transactionText)
+        {
+            _accountTransactions.Add(transactionText);
+            Console.WriteLine("Added: " + _accountTransactions[0]);
         }
     }
 }
