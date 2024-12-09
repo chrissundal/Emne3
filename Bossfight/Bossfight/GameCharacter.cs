@@ -13,7 +13,6 @@ namespace Bossfight
         private int _health;
         private int _strength;
         private int _stamina;
-        private int _randomStrength;
         private int _initialStamina;
 
         public GameCharacter(string name, int health, int strength, int stamina)
@@ -35,8 +34,7 @@ namespace Bossfight
 
         public void ShowInfo()
         {
-            Console.WriteLine(
-                $"Name: {_name}, Health: {_health}, Strength: {_strength}, Stamina: {_stamina}");
+            Console.WriteLine($"Name: {_name}, Health: {_health}, Strength: {_strength}, Stamina: {_stamina}");
         }
 
         public void Fight(GameCharacter opponent)

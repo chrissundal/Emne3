@@ -1,0 +1,3 @@
+﻿using UnittestCalculator;
+
+new Calculator();
