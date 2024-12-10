@@ -27,8 +27,9 @@ namespace WPFTerje
             {
                 Content = "0",
                 Width = 150,
-                FontSize = 24,
-                Background = new SolidColorBrush(Colors.LightBlue)
+                FontSize = 36,
+                Background = new SolidColorBrush(Colors.LightBlue),
+                Height = 100,
             };
             
             Panel = new StackPanel
