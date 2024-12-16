@@ -1,0 +1,4 @@
+﻿using InterfaceKlikkerSpill;
+
+new View();
+

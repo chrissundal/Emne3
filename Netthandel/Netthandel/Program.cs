@@ -1,0 +1,3 @@
+﻿using Netthandel;
+
+new Config();

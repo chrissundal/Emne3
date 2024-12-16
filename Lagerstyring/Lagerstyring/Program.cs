@@ -1,0 +1,3 @@
+﻿using Lagerstyring;
+
+new View();

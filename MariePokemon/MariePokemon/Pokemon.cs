@@ -12,7 +12,7 @@ namespace MariePokemon
         public string Type { get; private set; }
         public string Name { get; private set; }
         public int Health { get; private set; }
-        public int Strenghh { get; private set; }
+        public int Strength { get; private set; }
 
         public Pokemon(string name, string type)
         {
@@ -23,7 +23,7 @@ namespace MariePokemon
 
         public void Fight(Pokemon opponent)
         {
-            opponent.LooseHealth(Strenghh);
+            opponent.LooseHealth(Strength);
         }
 
         public void LooseHealth(int strength)
