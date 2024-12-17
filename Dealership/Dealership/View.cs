@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Dealership
+﻿namespace Dealership
 {
     internal class View
     {
@@ -26,23 +20,25 @@ namespace Dealership
             while (!exit)
             {
                 Console.Clear();
-                Console.WriteLine($"Velg en butikk eller trykk 'Q' for å avslutte");
+                Console.WriteLine($"Velg en butikk:");
                 showDealerShips();
-                var raw = Console.ReadLine();
-                if (raw.ToLower() == "q")
-                {
-                    exit = true;
-                }
-                var input = Convert.ToInt32(raw)-1;
+                int exitnum = _dealerships.Count;
+                Console.WriteLine($"{exitnum+1}. Tilbake");
+                var input = Convert.ToInt32(Console.ReadLine()) -1;
                 if (input < _dealerships.Count)
                 {
                     _selectedDealer = _dealerships[input];
                     _selectedDealer.GotoStore(selected);
                 }
+                else if (input == exitnum)
+                {
+                    exit = true;
+                    Console.Clear();
+                }
                 else
                 {
                     Console.WriteLine("Ikke gyldig butikk");
-                    Console.ReadKey();
+                    Console.ReadKey(true);
                 }
             }
         }

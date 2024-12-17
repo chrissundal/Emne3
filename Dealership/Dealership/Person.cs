@@ -65,5 +65,25 @@
                 return false;
             }
         }
+
+        public void ShowInventory()
+        {
+            if (_myTransportations.Count > 0)
+            {
+
+                int num = 1;
+                foreach (var veh in _myTransportations)
+                {
+                    Console.WriteLine($"{num}. {veh.Brand}");
+                    num++;
+                }
+            }
+            else
+            {
+                Console.WriteLine("Ingen kjøretøy");
+            }
+
+            Console.ReadKey(true);
+        }
     }
 }

@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Dealership
+﻿namespace Dealership
 {
     internal class Dealership
     {
@@ -63,8 +56,6 @@ namespace Dealership
 
         private void SelectTransport()
         {   
-            bool exitAllCars = false;
-            
                 Console.Clear();
                 ShowInventory();
                 if (_searchList.Count > 0)
@@ -102,24 +93,24 @@ namespace Dealership
                 Console.WriteLine($"1. Ta {_selectedTransport.Brand} på en prøvetur");
                 Console.WriteLine($"2. Kjøp {_selectedTransport.Brand}");
                 Console.WriteLine($"3. Tilbake");
-                switch (Console.ReadKey().KeyChar)
+                switch (Console.ReadKey(true).KeyChar)
                 {
                     case '1':
                         _selectedTransport.GoForARide(random);
-                        Console.ReadKey();
+                        Console.ReadKey(true);
                         break;
                     case '2':
                         if (_selectedUser.BuyTransport(_selectedTransport))
                         {
                             _searchList.Remove(_selectedTransport);
-                            Console.ReadKey();
+                            Console.ReadKey(true);
                             exitSelectCar = true;
                         }
                         else
                         {
                             Console.Clear();
                             Console.WriteLine("Du har ikke råd til denne");
-                            Console.ReadKey();
+                            Console.ReadKey(true);
                             exitSelectCar = true;
                         }
                         break;
@@ -144,7 +135,7 @@ namespace Dealership
             Console.Clear();
             Console.WriteLine($"Velkommen til {_dealershipName}, {_selectedUser.GetName()}");
             Console.WriteLine($"Din selger er {_seller.GetName()}");
-            Console.ReadKey();
+            Console.ReadKey(true);
             while (!exitStore)
             {
                 Console.Clear();
@@ -161,31 +152,31 @@ namespace Dealership
                         Console.Clear();
                         _searchList = _DealershipTransports;
                         SelectTransport();
-                        Console.ReadKey();
+                        Console.ReadKey(true);
                         break;
                     case '2':
                         Console.Clear();
                         RunSearch(Type.Car);
                         SelectTransport();
-                        Console.ReadKey();
+                        Console.ReadKey(true);
                         break;
                     case '3':
                         Console.Clear();
                         RunSearch(Type.Boat);
                         SelectTransport();
-                        Console.ReadKey();
+                        Console.ReadKey(true);
                         break;
                     case '4':
                         Console.Clear();
                         RunSearch(Type.Plane);
                         SelectTransport();
-                        Console.ReadKey();
+                        Console.ReadKey(true);
                         break;
                     case '5':
                         Console.Clear();
                         RunSearch(Type.Motorcycle);
                         SelectTransport();
-                        Console.ReadKey();
+                        Console.ReadKey(true);
                         break;
                     case '6':
                         Console.Clear();
@@ -193,7 +184,7 @@ namespace Dealership
                         break;
                     default:
                         Console.WriteLine("ikke gyldig");
-                        Console.ReadKey();
+                        Console.ReadKey(true);
                         break;
                 }
             }

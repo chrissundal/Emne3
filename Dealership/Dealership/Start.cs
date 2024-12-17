@@ -62,21 +62,54 @@
                 new Person("Bjarne", [], 2500000),
                 new Person("Line", [], 100000),
             ];
+            StartGenerate();
+        }
+
+        private void StartGenerate()
+        {
             for (int i = 0; i < 3; i++)
             {
                 GenerateDealership();
             }
-            var selected = SelectPerson();
-            Console.Clear();
-            Console.WriteLine($"{selected.GetName()} er valgt");
-            _view.Run(selected);
+
+            while (true)
+            {
+                var selected = SelectPerson();
+                Console.Clear();
+                Console.WriteLine($"{selected.GetName()} er valgt");
+                while (true)
+                {
+                    Console.Clear();
+                    Console.WriteLine($"1. Se {selected.GetName()} sin samling.");
+                    Console.WriteLine($"2. Gå ut i verden.");
+                    Console.WriteLine($"3. Tilbake.");
+                    var input = Console.ReadLine();
+                    if (input == "1")
+                    {
+                        selected.ShowInventory();
+                    }
+                    else if (input == "2")
+                    {
+                        _view.Run(selected);
+                    }
+                    else if (input == "3")
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Ikke gyldig input");
+                        Console.ReadKey(true);
+                    }
+                }
+            }
         }
 
         private void GenerateDealership()
         {
             var transports = new List<ITransportation>();
             ITransportation selectedtransport;
-            for (int i = 0; i < random.Next(3,10); i++)
+            for (int i = 0; i < random.Next(5,10); i++)
             {
                 selectedtransport = _allTransports[random.Next(_allTransports.Count)];
                 transports.Add(selectedtransport);
@@ -93,6 +126,7 @@
 
         private Person SelectPerson()
         {
+            Console.Clear();
             while (true)
             {
                 Console.WriteLine("Velg en person:");
@@ -102,10 +136,17 @@
                     Console.WriteLine($"{counter}. {person.GetName()}");
                     counter++;
                 }
+                var exitsum = _users.Count;
+                Console.WriteLine($"{exitsum+1}. Avslutt");
                 var input = Convert.ToInt32(Console.ReadLine())-1;
+                
                 if (input < _users.Count)
                 {
                     return _users[input];
+                }
+                else if (input == exitsum)
+                {
+                    Environment.Exit(0);
                 }
                 else
                 {
