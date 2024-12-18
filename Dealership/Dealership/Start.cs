@@ -80,6 +80,7 @@
                 while (true)
                 {
                     Console.Clear();
+                    selected.ShowWalletBalance();
                     Console.WriteLine($"1. Se {selected.GetName()} sin samling.");
                     Console.WriteLine($"2. Gå ut i verden.");
                     Console.WriteLine($"3. Tilbake.");

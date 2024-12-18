@@ -58,6 +58,7 @@
                 _myTransportations.Add(selectedTransport);
                 Console.WriteLine($"{selectedTransport.Brand} er kjøpt");
                 showMyTransportations();
+                _wallet -= selectedTransport.Price;
                 return true;
             }
             else
@@ -84,6 +85,16 @@
             }
 
             Console.ReadKey(true);
+        }
+
+        public void ShowWalletBalance()
+        {
+            var text = new string('-', 30);
+            string walletDisplay = _wallet > 1000000 ? $"{_wallet / 1000000.0:F2} M" : $"{_wallet} ";
+            Console.WriteLine($"Navn:           {_name}");
+            Console.WriteLine($"Konto:          {walletDisplay} kroner");
+            Console.WriteLine($"Kjøretøy:       {_myTransportations.Count} stk");
+            Console.WriteLine(text);
         }
     }
 }

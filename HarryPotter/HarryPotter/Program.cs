@@ -1,0 +1,3 @@
+﻿using HarryPotter;
+
+new World();

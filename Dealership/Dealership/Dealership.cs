@@ -103,7 +103,6 @@
                         if (_selectedUser.BuyTransport(_selectedTransport))
                         {
                             _searchList.Remove(_selectedTransport);
-                            Console.ReadKey(true);
                             exitSelectCar = true;
                         }
                         else
