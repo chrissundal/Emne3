@@ -2,6 +2,7 @@
 {
     internal class Config
     {
+        //test
         private List<IProducts> _allProducts;
         private World _myWorld;
         private List<string> _storenames;
