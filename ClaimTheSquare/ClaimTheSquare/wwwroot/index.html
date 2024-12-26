@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>Document</title>
     <style>
         .myGrid {
@@ -12,7 +12,7 @@
             grid-template-rows: repeat(8, 50px);
         }
 
-        .myGrid>div {
+        .myGrid > div {
             overflow: hidden;
             display: flex;
             justify-content: center;
@@ -28,37 +28,38 @@
 </head>
 
 <body>
-    <div id="app"></div>
-    <script>
-        let model;
-        init();
-        function updateView() {
-            document.getElementById('app').innerHTML = /*HTML*/`
+<div id="app"></div>
+<script>
+    let model;
+    init();
+
+    function updateView() {
+        document.getElementById('app').innerHTML = /*HTML*/`
                 ${createFormHtml()}
                 <div class="myGrid">
                     ${createSquaresHtml()}
                 </div>
             `;
-        }
+    }
 
-        function createSquaresHtml() {
-            let html = '';
-            for (let index = 0; index < 64; index++) {
-                let textObject = model.textObjects.find(to => to.index == index);
-                if (!textObject) {
-                    html += /*HTML*/`<div><button onclick="claim(${index})">fyll</button></div>`;
-                } else {
-                    html += /*HTML*/`
+    function createSquaresHtml() {
+        let html = '';
+        for (let index = 0; index < 64; index++) {
+            let textObject = model.textObjects.find(to => to.index == index);
+            if (!textObject) {
+                html += /*HTML*/`<div><button onclick="claim(${index})">fyll</button></div>`;
+            } else {
+                html += /*HTML*/`
                         <div style="color: ${textObject.foreColor}; background-color: ${textObject.backColor}">
                             ${textObject.text}
                         </div>`;
-                }
             }
-            return html;
         }
+        return html;
+    }
 
-        function createFormHtml() {
-            return /*HTML*/`
+    function createFormHtml() {
+        return /*HTML*/`
                 <div class="myForm">
                     <div>Tekst:</div>
                     <div>
@@ -73,67 +74,67 @@
                     <div>${createColorSelect('model.inputs.backColor')}</div>                    
                 </div>            
             `;
-        }
+    }
 
-        function createColorSelect(modelField) {
-            const selectedColor = eval(modelField);
-            let optionsHtml = '';
-            const noneSelected = selectedColor == null ? 'selected' : '';
-            for (let color of model.colors) {
-                const selected = color == selectedColor ? 'selected' : '';
-                optionsHtml += /*HTML*/`
+    function createColorSelect(modelField) {
+        const selectedColor = eval(modelField);
+        let optionsHtml = '';
+        const noneSelected = selectedColor == null ? 'selected' : '';
+        for (let color of model.colors) {
+            const selected = color == selectedColor ? 'selected' : '';
+            optionsHtml += /*HTML*/`
                     <option ${selected}>${color}</option>
                 `;
-            }
-            return /*HTML*/`    
+        }
+        return /*HTML*/`    
                 <select onchange="${modelField}=this.value">
                     <option ${noneSelected}></option>
                     ${optionsHtml}
                 </select>
                 `;
-        }
+    }
 
-        async function claim(index) {
-            const inputs = model.inputs;
-            if (inputs.foreColor == null
-                || inputs.backColor == null
-                || inputs.text == null
-                || inputs.text.trim().length == 0
-            ) return;
-            /*model.textObjects.push({ ...inputs, index });*/
-            model.inputs = {
+    async function claim(index) {
+        const inputs = model.inputs;
+        if (inputs.foreColor == null
+            || inputs.backColor == null
+            || inputs.text == null
+            || inputs.text.trim().length == 0
+        ) return;
+        /*model.textObjects.push({ ...inputs, index });*/
+        model.inputs = {
+            foreColor: null,
+            backColor: null,
+            text: null,
+        };
+        //sende data til API
+        const newtextObject = {...inputs, index};
+        let response = await axios.post('/textObjects', newtextObject);
+
+        //oppdatere alt
+        init();
+        //updateView(); erstattes av init()
+    }
+
+    async function init() {
+        model = {
+            inputs: {
                 foreColor: null,
                 backColor: null,
                 text: null,
-            };
-            //sende data til API
-            const newtextObject = {...inputs, index};
-            let response = await axios.post('/textObjects',newtextObject);
-            
-            //oppdatere alt
-            init();
-            //updateView(); erstattes av init()
-        }
+            },
+            colors: ["black", "white", "gray", "silver", "maroon", "red", "purple", "fushsia", "green", "lime", "olive", "yellow", "navy", "blue", "teal", "aqua"],
+            textObjects: [
+                //{ index: 17, text: 'Terje', backColor: 'green', foreColor: 'white' },
+            ]
+        };
 
-        async function init() {
-            model = {
-                inputs: {
-                    foreColor: null,
-                    backColor: null,
-                    text: null,
-                },
-                colors: ["black", "white", "gray", "silver", "maroon", "red", "purple", "fushsia", "green", "lime", "olive", "yellow", "navy", "blue", "teal", "aqua"],
-                textObjects: [
-                    //{ index: 17, text: 'Terje', backColor: 'green', foreColor: 'white' },
-                ]
-            };
+        let response = await axios.get('/textObjects');
+        model.textObjects = response.data;
 
-            let response = await axios.get('/textObjects');
-            model.textObjects = response.data;
-            
-            updateView();
-        }
-    </script>
+        updateView();
+    }
+</script>
 
 </body>
 

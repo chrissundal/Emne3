@@ -2,11 +2,6 @@
 
 public class TextObjects
 {
-    public string BackColor  { get; set; }
-    public string ForeColor  { get; set; }
-    public int Index { get; set; }
-    public string Text  { get; set; }
-
     public TextObjects(string backColor, string foreColor, int index, string text)
     {
         BackColor = backColor;
@@ -14,4 +9,9 @@ public class TextObjects
         Index = index;
         Text = text;
     }
+
+    public string BackColor { get; set; }
+    public string ForeColor { get; set; }
+    public int Index { get; set; }
+    public string Text { get; set; }
 }

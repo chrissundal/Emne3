@@ -7,8 +7,5 @@ app.UseStaticFiles();
 var datamanager = new DataManager();
 
 app.MapGet("/textObjects", () => datamanager.GetTextObjects());
-app.MapPost("/textObjects", (TextObjects textObjects) =>
-{
-    datamanager.AddNewObjects(textObjects);
-});
+app.MapPost("/textObjects", (TextObjects textObjects) => { datamanager.AddNewObjects(textObjects); });
 app.Run();
