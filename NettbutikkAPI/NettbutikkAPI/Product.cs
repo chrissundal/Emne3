@@ -18,4 +18,9 @@ public class Product
         Stock = stock;
         ImageUrl = imageUrl;
     }
+
+    public void SetStock(int updatedProductStock)
+    {
+        Stock = updatedProductStock;
+    }
 }

@@ -3,9 +3,14 @@
 public class DataManager
 {
     private List<Product> _products;
-
+    private List<Person> _users;
     public DataManager()
     {
+        _users =
+        [
+            new Person("Chris","Jacobsen","chris","123",0,[],[],true),
+            new Person("Bjarne","Hansen","bjarne","123",1,[],[],false),
+        ];
         _products =
         [
             new Product(0,"Hat","Clothing",49,10,"IMG/hatt.jpg"),
@@ -22,8 +27,17 @@ public class DataManager
         ];
     }
 
+    public List<Person> GetUsers()
+    {
+        return _users;
+    }
     public List<Product> GetProducts()
     {
         return _products;
+    }
+
+    public Person GetUsersById(int id)
+    {
+        return _users.FirstOrDefault(u => u.Id == id);
     }
 }

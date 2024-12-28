@@ -1,8 +1,9 @@
 
-updateView()
-async function updateView() {
+async function updateStoreView() {
+    findPriceOfCartItems();
     document.getElementById('app').innerHTML = /*HTML*/`
     <div class="topHeader">
+    <h3>${Model.currentUser.firstName}</h3>
     <h1>Nettbutikk</h1>
        ${createAddProducts()}
     </div>
@@ -27,10 +28,7 @@ async function updateView() {
     </footer>
     `;
 }
-function resetSort() {
-    Model.app.html.productHtml = '';
-    updateView();
-}    
+
 function sortBy(input)
 {
     let index = Model.app.category[input];
@@ -67,46 +65,6 @@ function createAddProducts()
     </div>
     `;
 }
-function openAddProducts()
-{
-    Model.app.dropdown.isAdding = true;
-    updateView();
-}
-function closeAddProducts()
-{
-    Model.app.dropdown.isAdding = false;
-    Model.input.inputName ="";
-    Model.input.inputPrice = 0;
-    Model.input.inputCategory = "";
-    Model.input.inputStock = 0;
-    Model.input.inputImage = "";
-    updateView();
-}
-async function addItems()
-{
-    let newProducts = {
-        id: Model.input.productItems.length,
-        nameOfProduct: Model.input.inputName,
-        typeOfProduct: Model.input.inputCategory,
-        price: parseInt(Model.input.inputPrice),
-        stock: parseInt(Model.input.inputStock),
-        imageUrl: Model.input.inputImage
-    };
-    
-    let response = await axios.post('/products', newProducts);
-    await showProducts();
-    closeAddProducts();
-}
-function readPhotoMemory(input) {
-    const file = input.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(event) {
-            Model.input.inputImage = event.target.result;
-        }
-        reader.readAsDataURL(file);
-    }
-}
 function createDropdown() {
     let html = '';
     if (Model.app.dropdown.isOpen == false) return `
@@ -123,6 +81,7 @@ function createDropdown() {
                 <div><strong>Totalt: ${Model.input.totalPrice} kr</strong></div>
                 <button onclick="checkOut()">Checkout</button>
                 <button onclick="closePocket()">Close</button>
+                <button onclick="deleteCart()">Delete</button>
             </div>
         </div>
         `;
@@ -132,13 +91,13 @@ function createDropdown() {
 function createCartItems() {
     let html = '';
     
-    for (let cartIndex = 0; cartIndex < Model.input.shoppingCart.length; cartIndex++) {
+    for (let cartIndex = 0; cartIndex < Model.currentUser.myCart.length; cartIndex++) {
         html += `
         <div class="innerCart">
-            <div>Antall: ${Model.input.shoppingCart[cartIndex].quantity}</div>
-            <img src="${Model.input.shoppingCart[cartIndex].imageUrl}" height = 50px width = 50px/>
-            <div>${Model.input.shoppingCart[cartIndex].nameOfProduct}</div>
-            <div>Pris: ${Model.input.shoppingCart[cartIndex].price} kr</div>
+            <div>Antall: ${Model.currentUser.myCart[cartIndex].stock}</div>
+            <img src="${Model.currentUser.myCart[cartIndex].imageUrl}" height = 50px width = 50px/>
+            <div>${Model.currentUser.myCart[cartIndex].nameOfProduct}</div>
+            <div>Pris: ${Model.currentUser.myCart[cartIndex].price} kr</div>
             <button onclick="deleteItem(${cartIndex})">X</button>
         </div>
         ${Model.input.errorMessage ?? ''}

@@ -12,7 +12,13 @@ let Model = {
         },
         html: {
             productHtml: '',
-        }
+        },
+        currentPages: [
+            "Login",
+            "Employee",
+            "Store"
+        ],
+        currentPage: "Login"
     },
     input: {
         errorMessage: '',
@@ -23,9 +29,20 @@ let Model = {
         inputImage: '',
         ShoppingCartCounter: 0,
         totalPrice: 0,
-        shoppingCart: [],
-        productItems: []
+        register: {
+            firstname: '',
+            lastname: '',
+            username: '',
+            password: '',
+            repeatpassword: '',
+        },
+        login: {
+            username: '',
+            password: '',
+        }
     },
+    currentUser: {},
+    users: []
 }
 
 

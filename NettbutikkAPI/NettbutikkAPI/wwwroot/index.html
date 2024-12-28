@@ -5,14 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="Employee/employeestyle.css">
+    <link rel="stylesheet" href="Login/loginStyle.css">
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 
-<body>
+<body onload="updateView()">
     
     <div id="app"></div>
+    <script>
+        function updateView()
+        {
+            if(Model.app.currentPage == "Store")
+            {
+                 updateStoreView();
+            }
+            else if (Model.app.currentPage == "Employee")
+            {
+                //updateEmployeeView();
+            }
+            else if (Model.app.currentPage == "Login")
+            {
+                updateLoginView();
+            }
+        }
+    </script>
     <script src="model.js"></script>
-    <script src="controller.js"></script>
-    <script src="view.js"></script>
+    <script src="Employee/employeeController.js"></script>
+    <script src="Login/loginController.js"></script>
+    <script src="Store/storeController.js"></script>
+    <script src="Employee/employeeView.js"></script>
+    <script src="Login/loginView.js"></script>
+    <script src="Store/storeView.js"></script>
 </body>
 </html>
