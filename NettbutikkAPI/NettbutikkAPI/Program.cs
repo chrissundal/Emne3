@@ -6,70 +6,51 @@ var app = builder.Build();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 var datamanager = new DataManager();
-List<Product> Allproducts;
-List<Person> Users;
+List<Product> allproducts;
+List<Person> users;
+List<Order> orders;
 if (File.Exists("products.json"))
 {
     var json = File.ReadAllText("products.json");
-    Allproducts = JsonSerializer.Deserialize<List<Product>>(json);
+    allproducts = JsonSerializer.Deserialize<List<Product>>(json);
 }
 else
 {
-    Allproducts = datamanager.GetProducts();
+    allproducts = datamanager.GetProducts();
 }
 
 if (File.Exists("users.json"))
 {
-    var json = File.ReadAllText("users.json"); 
-    Users = JsonSerializer.Deserialize<List<Person>>(json);
+    var json = File.ReadAllText("users.json");
+    users = JsonSerializer.Deserialize<List<Person>>(json);
 }
 else
 {
-    Users = datamanager.GetUsers();
+    users = datamanager.GetUsers();
 }
-app.MapGet("/products", () => Allproducts);
-app.MapGet("/users", () => Users);
+if (File.Exists("orders.json"))
+{
+    var json = File.ReadAllText("orders.json");
+    orders = JsonSerializer.Deserialize<List<Order>>(json) ?? new List<Order>();
+}
+else
+{
+    orders = datamanager.GetOrders();
+}
+app.MapGet("/orders", () => orders);
+app.MapGet("/products", () => allproducts);
+app.MapGet("/users", () => users);
+app.MapGet("/check-username/{username}", (string username) =>
+{
+    var userExists = users.Any(u => u.UserName == username);
+    return Results.Ok(userExists);
+});
+app.MapGet("/userslength", () => users.Count);
 app.MapGet("/users/{id:int}", (int id) =>
 {
-    var user = Users.FirstOrDefault(u => u.Id == id); 
-    return user != null ? Results.Ok(user) : Results.NotFound("User not found");
-});
-app.MapPost("/products", (Product newProduct) =>
-{
-    Allproducts.Add(newProduct);
-    var json = JsonSerializer.Serialize(Allproducts);
-    File.WriteAllText("products.json", json);
-});
-app.MapPost("/users", (Person newUser) => 
-{ 
-    Users.Add(newUser); 
-    var json = JsonSerializer.Serialize(Users); 
-    File.WriteAllText("users.json", json); 
-});    
-app.MapPut("/products/{id:int}", (int id, Product updatedProduct) =>
-{
-    var product = Allproducts.FirstOrDefault(p => p.Id == id);
-    if (product != null)
-    {
-        product.SetStock(updatedProduct.Stock);
-        var json = JsonSerializer.Serialize(Allproducts);
-        File.WriteAllText("products.json", json);
-        return Results.Ok(updatedProduct);
-    }
-    else
-    {
-        return Results.NotFound("Product not found");
-    }
-});
-
-app.MapPut("/users/{id:int}/checkout", (int id) =>
-{
-    var user = Users.FirstOrDefault(u => u.Id == id);
+    var user = users.FirstOrDefault(u => u.Id == id);
     if (user != null)
     {
-        user.Checkout(); 
-        var json = JsonSerializer.Serialize(Users); 
-        File.WriteAllText("users.json", json); 
         return Results.Ok(user);
     }
     else
@@ -77,21 +58,91 @@ app.MapPut("/users/{id:int}/checkout", (int id) =>
         return Results.NotFound("User not found");
     }
 });
-app.MapPut("/users/{id:int}", (int id, Person updatedUser) =>
+app.MapPost("/login", (LoginRequest loginRequest) =>
 {
-    var userIndex = Users.FindIndex(u => u.Id == id);
-    if (userIndex >= 0)
+    Console.WriteLine($"Received login attempt with Username: {loginRequest.UserName}, Password: {loginRequest.PassWord}");
+    var user = users.FirstOrDefault(u => u.UserName == loginRequest.UserName && u.PassWord == loginRequest.PassWord);
+    if (user != null)
     {
-        Users[userIndex] = updatedUser;
-        var json = JsonSerializer.Serialize(Users);
-        File.WriteAllText("users.json", json);
-        return Results.Ok(updatedUser);
+        return Results.Ok(user);
     }
     else
     {
-        return Results.NotFound("User not found");
+        return Results.Unauthorized();
     }
+});
+app.MapPost("/products", (Product newProduct) =>
+{
+    newProduct.SetId(allproducts.Count);
+    allproducts.Add(newProduct);
+    var json = JsonSerializer.Serialize(allproducts);
+    File.WriteAllText("products.json", json);
+});
+app.MapPost("/users", (Person newUser) =>
+{
+    users.Add(newUser);
+    var json = JsonSerializer.Serialize(users);
+    File.WriteAllText("users.json", json);
+});
+app.MapPut("/products/{id:int}", (int id, Product updatedProduct) =>
+{
+    var product = allproducts.FirstOrDefault(p => p.Id == id);
+    if (product != null)
+    {
+        product.SetStock(updatedProduct.Stock);
+        var json = JsonSerializer.Serialize(allproducts);
+        File.WriteAllText("products.json", json);
+        return Results.Ok(updatedProduct);
+    }
+
+    return Results.NotFound("Product not found");
+});
+app.MapPost("/orders", (Order newOrder) =>
+{
+    orders.Add(newOrder);
+    var json = JsonSerializer.Serialize(orders);
+    File.WriteAllText("orders.json", json);
+    return Results.Ok(newOrder);
+});
+app.MapPut("/orders", (Order updatedOrder) =>
+{
+    var orderIndex = orders.FindIndex(order => order.OrderId == updatedOrder.OrderId);
+    if (orderIndex >= 0)
+    {
+        orders[orderIndex] = updatedOrder;
+    }
+    else
+    {
+        orders.Add(updatedOrder);
+    }
+
+    var updatedJson = JsonSerializer.Serialize(orders);
+    File.WriteAllText("orders.json", updatedJson);
+    return Results.Ok(updatedOrder);
+});
+
+app.MapPut("/users/{id:int}", (int id, Person updatedUser) =>
+{
+    var userIndex = users.FindIndex(u => u.Id == id);
+    if (userIndex >= 0)
+    {
+        users[userIndex] = updatedUser;
+        var json = JsonSerializer.Serialize(users);
+        File.WriteAllText("users.json", json);
+        return Results.Ok(updatedUser);
+    }
+
+    return Results.NotFound("User not found");
+});
+app.MapDelete("/products/{id:int}", (int id) =>
+{
+    var product = allproducts.FirstOrDefault(p => p.Id == id);
+    if (product != null)
+    {
+        allproducts.Remove(product);
+        return Results.Ok();
+    }
+    return Results.NotFound("Product not found");
 });
 
 app.Run();
-

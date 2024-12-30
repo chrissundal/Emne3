@@ -1,1 +1,0 @@
-[{"FirstName":"Chris","LastName":"Jacobsen","UserName":"chris","PassWord":"123","Id":0,"MyCart":[{"Id":4,"NameOfProduct":"Dinosaur","TypeOfProduct":"Toy","Price":149,"Stock":1,"ImageUrl":"IMG/dinosaur.jpg"}],"MyInventory":[],"IsEmployee":true},{"FirstName":"Bjarne","LastName":"Hansen","UserName":"bjarne","PassWord":"123","Id":1,"MyCart":[],"MyInventory":[],"IsEmployee":false}]

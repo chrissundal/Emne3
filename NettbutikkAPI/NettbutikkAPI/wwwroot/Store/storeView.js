@@ -1,19 +1,13 @@
 
 async function updateStoreView() {
     findPriceOfCartItems();
+    let checkifEmployee = Model.currentUser.isEmployee ? `<img src="IMG/employee.png" class="addItemsButton" height=50px onclick="goToEmployee()">` : '';
     document.getElementById('app').innerHTML = /*HTML*/`
     <div class="topHeader">
-    <h3>${Model.currentUser.firstName}</h3>
     <h1>Nettbutikk</h1>
-       ${createAddProducts()}
     </div>
-    <div class="categoryButtons">
-        <button onclick="sortBy(0)">Mat</button>
-        <button onclick="sortBy(1)">Klær</button>
-        <button onclick="sortBy(2)">Kontor</button>
-        <button onclick="sortBy(3)">Leker</button>
-        <button onclick="resetSort()">Reset</button>
-    </div>
+    ${showButtons()}
+    <img src="IMG/orders.png" class="ordersButton" height=40px onclick="goToProfile()">
     <div class="categoryResult">
         ${Model.app.html.productHtml}
     </div>
@@ -22,15 +16,27 @@ async function updateStoreView() {
         ${await showProducts()}
         </div>
         ${createDropdown()}
+        <img src="IMG/logoutuser.png" class="logoutButton" height=60px onclick="goToLogin()">
+        ${checkifEmployee}
     <footer>
         <p>Author: Chris</p>
         <p><a href="mailto:christoffersj@hotmail.com">Kontakt oss</a></p>
     </footer>
     `;
 }
-
-function sortBy(input)
+function showButtons()
 {
+    return `
+    <div class="categoryButtons">
+        <button onclick="sortBy(0)">Mat</button>
+        <button onclick="sortBy(1)">Klær</button>
+        <button onclick="sortBy(2)">Kontor</button>
+        <button onclick="sortBy(3)">Leker</button>
+        <button onclick="resetSort()">Reset</button>
+    </div>
+    `;
+}
+function sortBy(input) {
     let index = Model.app.category[input];
     let result = Model.input.productItems.filter(item => item.typeOfProduct === index);
     Model.app.html.productHtml = '';
@@ -50,21 +56,7 @@ function sortBy(input)
     }
     updateView();
 }
-function createAddProducts()
-{
-    if(!Model.app.dropdown.isAdding) return `<img src="IMG/add.png" class="addItemsButton" height=60px onclick="openAddProducts()">`;
-    return `
-    <div class="addProducts">
-    <input type="text" placeholder="Navn på produkt" onInput="Model.input.inputName=this.value"/>
-    <input type="text" placeholder="Kategori" onInput="Model.input.inputCategory=this.value"/>
-    <input type="file" onchange="readPhotoMemory(this)"/>
-    <input type="number" placeholder="Pris" onInput="Model.input.inputPrice=this.value"/>
-    <input type="number" placeholder="Antall" onInput="Model.input.inputStock=this.value"/>
-    <button onclick="addItems()">Add</button>
-    <button onclick="closeAddProducts()">Close</button>
-    </div>
-    `;
-}
+
 function createDropdown() {
     let html = '';
     if (Model.app.dropdown.isOpen == false) return `
@@ -88,9 +80,10 @@ function createDropdown() {
     }
     return html;
 }
+
 function createCartItems() {
     let html = '';
-    
+
     for (let cartIndex = 0; cartIndex < Model.currentUser.myCart.length; cartIndex++) {
         html += `
         <div class="innerCart">
@@ -104,14 +97,6 @@ function createCartItems() {
         `;
     }
     return html;
-}
-function displayErrorMessage(message) {
-    Model.input.errorMessage = message;
-    updateView();
-    setTimeout(() => {
-        Model.input.errorMessage = '';
-        updateView();
-    }, 3000);
 }
 
 async function showProducts() {

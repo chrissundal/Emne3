@@ -1,5 +1,4 @@
-﻿ function updateLoginView() {
-     
+﻿function updateLoginView() {
     document.getElementById('app').innerHTML = /*HTML*/`
     <div class="loginContainer">
         <div class="login">
@@ -10,34 +9,26 @@
             <input type="text" placeholder="skriv inn passord..." oninput="Model.input.login.password=this.value"/>
             ${Model.input.errorMessage}
             <button onclick="checklogin()">Login</button>
+            <div>ikke medlem?</div>
+            <button onclick="registerView()">Sign up</button>
         </div>
     </div>
-    
     `;
 }
- async function checklogin() {
-     await getAllUsers();
-     let username = Model.input.login.username;
-     let password = Model.input.login.password;
-     let user = Model.users.find(user => user.userName === username && user.passWord === password);
-
-     if (user) {
-         Model.currentUser = user;
-         goToStore();
-     } else {
-         Model.input.errorMessage = 'Invalid username or password';
-         updateLoginView();
-     }
- }
-
- async function getAllUsers() {
-     try 
-     { 
-         let response = await axios.get('/users'); 
-         Model.users = response.data; 
-     } 
-     catch (error) 
-     { 
-         console.error("Error fetching users:", error); 
-     }
- }
+function registerView() {
+    document.getElementById('app').innerHTML = /*HTML*/`
+    <div class="loginContainer">
+        <div class="login">
+            <input type="text" placeholder="skriv inn fornavn..." value="${Model.input.register.firstname}" oninput="Model.input.register.firstname=this.value"/>    
+            <input type="text" placeholder="skriv inn etternavn..." value="${Model.input.register.lastname}" oninput="Model.input.register.lastname=this.value"/>
+            <input type="text" placeholder="skriv inn brukernavn..." value="${Model.input.register.username}" oninput="Model.input.register.username=this.value"/>    
+            <input type="text" placeholder="skriv inn adresse..." value="${Model.input.register.address}" oninput="Model.input.register.address=this.value"/>    
+            <input type="text" placeholder="skriv inn by..." value="${Model.input.register.city}" oninput="Model.input.register.city=this.value"/>    
+            <input type="text" placeholder="skriv inn passord..." oninput="Model.input.register.password=this.value"/>    
+            <input type="text" placeholder="repeter passord..." oninput="Model.input.register.repeatpassword=this.value"/>    
+            ${Model.input.errorMessage}
+            <button onclick="checkUserNameExist()">Sign up</button>
+        </div>
+    </div>
+    `;
+}

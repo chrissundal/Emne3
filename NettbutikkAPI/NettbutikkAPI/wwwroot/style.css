@@ -23,6 +23,7 @@ body {
     padding: 20px;
     width: 80%;
 }
+
 .categoryResult {
     display: flex;
     flex-wrap: wrap;
@@ -32,20 +33,24 @@ body {
     padding-right: 20px;
     max-width: 80%;
 }
-.allProductText{
+
+.allProductText {
     text-align: center;
     border-top: 1px solid lightgray;
     padding: 10px;
     margin-top: 0px;
 }
-.categoryButtons{
+
+.categoryButtons {
     margin: 5px;
     display: flex;
     gap: 10px;
 }
+
 .categoryButtons button {
     width: 70px;
 }
+
 .products {
     background-color: white;
     border: 1px solid #ddd;
@@ -55,15 +60,18 @@ body {
     width: 200px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s;
-    
+
 }
-.products button{
+
+.products button {
     margin-top: 10px;
 }
+
 .products:hover {
     transform: scale(1.05);
 }
-.innerImg{
+
+.innerImg {
     height: 150px;
     display: flex;
     justify-content: center;
@@ -114,7 +122,8 @@ button:hover {
 .innerCart img {
     border-radius: 5px;
 }
-.cartButtonDiv{
+
+.cartButtonDiv {
     position: absolute;
     top: 0px;
     right: 0px;
@@ -124,9 +133,11 @@ button:hover {
     align-items: center;
     display: flex;
 }
+
 .cartButtonDiv:hover {
     transform: scale(1.03);
 }
+
 .cartButton {
     position: relative;
     top: 10px;
@@ -134,13 +145,45 @@ button:hover {
     border: none;
     padding: 10px;
 }
+
 .addItemsButton {
+    cursor: pointer;
+    position: absolute;
+    z-index: 2;
+    top: 12px;
+    left: 100px;
+    border: none;
+    padding: 10px;
+    transition: 0.4s ease;
+}
+.addItemsButton:hover {
+    transform: scale(1.05);
+}
+.logoutButton {
+    cursor: pointer;
     position: absolute;
     z-index: 2;
     top: 10px;
     left: 30px;
     border: none;
     padding: 10px;
+    transition: 0.4s ease;
+}
+.logoutButton:hover {
+    transform: scale(1.05);
+}
+.ordersButton{
+    cursor: pointer;
+    position: absolute;
+    z-index: 2;
+    top: 20px;
+    right: 150px;
+    border: none;
+    padding: 10px;
+    transition: 0.4s ease;
+}
+.ordersButton:hover {
+    transform: scale(1.05);
 }
 .innerItem {
     text-align: center;
@@ -152,14 +195,15 @@ button:hover {
     height: auto;
     border-radius: 5px;
 }
-.cartCounter{
+
+.cartCounter {
     position: absolute;
     top: 40px;
     right: 50px;
     font-size: large;
     color: white;
     width: 30px;
-    font-weight: 900;   
+    font-weight: 900;
 }
 
 footer {
@@ -184,16 +228,3 @@ footer a:hover {
     text-decoration: underline;
 }
 
-.addProducts{
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    height: 400px;
-    width: 400px;
-    background-color: gray;
-    z-index: 3;
-    padding: 10px;
-    gap: 10px;
-}

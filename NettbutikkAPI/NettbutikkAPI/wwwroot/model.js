@@ -9,6 +9,7 @@ let Model = {
         dropdown: {
             isOpen: false,
             isAdding: false,
+            editMode: ''
         },
         html: {
             productHtml: '',
@@ -16,9 +17,10 @@ let Model = {
         currentPages: [
             "Login",
             "Employee",
-            "Store"
+            "Store",
+            "Profile"
         ],
-        currentPage: "Login"
+        currentPage: "Employee"
     },
     input: {
         errorMessage: '',
@@ -34,15 +36,28 @@ let Model = {
             lastname: '',
             username: '',
             password: '',
+            address: '',
+            city: '',
             repeatpassword: '',
         },
         login: {
             username: '',
             password: '',
-        }
+        },
+        productItems: []
     },
-    currentUser: {},
-    users: []
+    orders: [],
+    currentUser: {
+        firstName: "Chris",
+        lastName: "Jacobsen",
+        userName: "c",
+        passWord: "1",
+        address: "Svingen 2",
+        city: "Larvik",
+        id: 0,
+        myCart: [],
+        isEmployee: true,
+    },
 }
 
 
