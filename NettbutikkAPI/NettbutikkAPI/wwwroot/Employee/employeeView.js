@@ -14,19 +14,21 @@
 }
 function showSortButtonsAdmin()
 {
+    let html = '';
+    for (let i = 0; i < Model.app.category.length; i++) {
+        html += `
+            <button onclick="sortByCategoryAdmin(${i})">${Model.app.category[i]}</button>
+        `;
+    }
     return `
     <div class="categoryButtons">
-        <button onclick="sortByCategoryAdmin(0)">Mat</button>
-        <button onclick="sortByCategoryAdmin(1)">Klær</button>
-        <button onclick="sortByCategoryAdmin(2)">Kontor</button>
-        <button onclick="sortByCategoryAdmin(3)">Leker</button>
-        <button onclick="sortByCategoryAdmin(4)">Alle</button>
-        <button onclick="resetSort()">Lukk</button>
+        ${html}
         <button onclick="openAddProducts()">Legg til produkt</button>
         <button onclick="showPendingOrders()">Sende</button>
     </div>
     `;
 }
+ 
  async function showPendingOrders() {
      let orderResponse = await axios.get(`/orders`)
      let orders = orderResponse.data;
@@ -85,17 +87,12 @@ function showSortButtonsAdmin()
          </tr>
          `;
  }
- async function sendOrder(orderId) {
-     let foundOrder = Model.orders.find(order => order.orderId === orderId);
-     foundOrder.isSent = true;
-     await axios.put('/orders', foundOrder);
-     await showPendingOrders();
- }
+
  async function sortByCategoryAdmin(input) {
      let response = await axios.get('/products');
      Model.input.productItems = response.data;
      let result;
-     if (input == 4) {
+     if (input === 7) {
          result = Model.input.productItems;
      } else {
          let index = Model.app.category[input];
@@ -139,23 +136,4 @@ function showSortButtonsAdmin()
     `;
      updateView();
  }
-
-
- async function addInventoryAdmin(itemId,input)
-{
-    let product = Model.input.productItems[itemId]
-    product.stock = Model.input.inputStock;
-    Model.input.inputStock = 0;
-    Model.app.dropdown.editMode = '';
-    await updateServerData(product);
-    sortByCategoryAdmin(input);
-}
-async function deleteItemAdmin(itemId,input)
-{
-    if(confirm('Er du sikker?') == true)
-    {
-        Model.input.productItems.splice(itemId, 1);
-        await axios.delete(`/products/${itemId}`);
-        sortByCategoryAdmin(input);
-    }
-}
+ 

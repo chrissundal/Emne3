@@ -8,13 +8,14 @@ async function updateStoreView() {
     </div>
     ${showButtons()}
     <img src="IMG/orders.png" class="ordersButton" height=40px onclick="goToProfile()">
+    <div class="storeMessage">${Model.input.errorMessage}</div>
+    <div class="productsCategoryText">${Model.app.html.categoryText}</div>
     <div class="categoryResult">
-        ${Model.app.html.productHtml}
+        ${Model.app.html.storeItems}
     </div>
-    <div class="allProductText">Alle produkter:</div>
-        <div class="grid">
-        ${await showProducts()}
-        </div>
+    <div class="qtyGrid">
+        ${Model.app.html.quantity}
+    </div>
         ${createDropdown()}
         <img src="IMG/logoutuser.png" class="logoutButton" height=60px onclick="goToLogin()">
         ${checkifEmployee}
@@ -28,33 +29,85 @@ function showButtons()
 {
     return `
     <div class="categoryButtons">
-        <button onclick="sortBy(0)">Mat</button>
-        <button onclick="sortBy(1)">Klær</button>
-        <button onclick="sortBy(2)">Kontor</button>
-        <button onclick="sortBy(3)">Leker</button>
-        <button onclick="resetSort()">Reset</button>
+        <button onclick="sortBy(0)">${Model.app.category[0]}</button>
+        <button onclick="sortBy(1)">${Model.app.category[1]}</button>
+        <button onclick="sortBy(2)">${Model.app.category[2]}</button>
+        <button onclick="sortBy(3)">${Model.app.category[3]}</button>
+        <button onclick="sortBy(4)">${Model.app.category[4]}</button>
+        <button onclick="sortBy(5)">${Model.app.category[5]}</button>
+        <button onclick="sortBy(6)">${Model.app.category[6]}</button>
+        <button onclick="sortBy(7)">${Model.app.category[7]}</button>
     </div>
     `;
 }
-function sortBy(input) {
-    let index = Model.app.category[input];
-    let result = Model.input.productItems.filter(item => item.typeOfProduct === index);
-    Model.app.html.productHtml = '';
-    for (let item of result) {
-        let checkstock = item.stock > 0 ? `<button class="addToCartBtn" onclick="addToCart(${item.id})">add to cart</button>` : '';
-        Model.app.html.productHtml += `
-            <div class="products">
-                <div class="innerItem">
-                    <div>${item.nameOfProduct}</div><br>
-                    <div class="innerImg"><img src="${item.imageUrl}" height = 100px width = 100px/></div>
-                    <div>Pris: ${item.price} kr</div>
-                    <div>Tilgjengelig: ${item.stock}</div>
-                    ${checkstock}
-                </div>
-            </div>
-        `;
+async function sortBy(input) {
+    Model.app.html.storeItems = '';
+    let response = await axios.get('/products');
+    Model.input.productItems = response.data;
+    if (input === 7) {
+        for (let i = 0; i < Model.app.category.length -1; i++) {
+            let categoryItems = Model.input.productItems.filter(item => item.typeOfProduct === Model.app.category[i]);
+            if (categoryItems.length == 0) {
+                Model.app.html.storeItems += `
+                <h3>${Model.app.category[i]}</h3>
+                <div>Her var det tomt</div>
+                <br><div class="borderBottomProduct"></div>
+            `;
+            }
+            buildProductHtml(categoryItems,input,i);
+        }
+    } else {
+        let sortedProducts = Model.input.productItems.filter(item => item.typeOfProduct === Model.app.category[input]);
+        let i = input;
+        buildProductHtml(sortedProducts,input,i);
     }
     updateView();
+}
+
+function GetQuantity(itemId, input) {
+    Model.app.html.quantity = `
+    <div class="qty">
+        <div>Hvor mange vil du legge til?</div>
+        <div class="innerqtybuttons">
+            <button onclick="Model.input.inputQty=1; addToCart(${itemId}, ${input})">1</button>
+            <button onclick="Model.input.inputQty=2; addToCart(${itemId}, ${input})">2</button>
+            <button onclick="Model.input.inputQty=5; addToCart(${itemId}, ${input})">5</button>
+            <button onclick="Model.input.inputQty=10; addToCart(${itemId}, ${input})">10</button>
+            <button onclick="CloseQuantity()">Avbryt</button>
+        </div>
+    </div>
+    `;
+    updateView();
+}
+function CloseQuantity(){
+    Model.app.html.quantity = '';
+    Model.input.inputQty = 0;
+    updateView();
+}
+function buildProductHtml(sortedProducts, input,i) {
+    if (sortedProducts.length > 0) {
+        let html = '';
+        for(let item of sortedProducts) {
+            let checkstock = item.stock > 0 ? `<button class="addToCartBtn" onclick="GetQuantity(${item.id},${input})">add to cart</button>` : '';
+            html += `
+                <div class="products">
+                    <div class="innerItem">
+                        <div>${item.nameOfProduct}</div><br>
+                        <div class="innerImg"><img src="${item.imageUrl}" height="100px" width="100px" /></div>
+                        <div>Pris: ${item.price} kr</div>
+                        <div>Tilgjengelig: ${item.stock}</div>
+                    </div>
+                        ${checkstock}
+                </div>
+            `;
+        }
+        Model.app.html.storeItems += `
+        <h3>${Model.app.category[i]}</h3>
+        <div class="categoryDividers">${html}</div>
+        <div class="borderBottomProduct"></div>
+        `;
+    }
+    updateView()
 }
 
 function createDropdown() {
@@ -99,23 +152,3 @@ function createCartItems() {
     return html;
 }
 
-async function showProducts() {
-    let showpro = '';
-    let response = await axios.get('/products');
-    Model.input.productItems = response.data;
-    for (let index = 0; index < Model.input.productItems.length; index++) {
-        let checkstock = Model.input.productItems[index].stock > 0 ? `<button class="addToCartBtn" onclick="addToCart(${index})">add to cart</button>` : '';
-        showpro += `
-        <div class="products">
-            <div class="innerItem">
-                <div>${Model.input.productItems[index].nameOfProduct}</div><br>
-                <div class="innerImg"><img src="${Model.input.productItems[index].imageUrl}" height = 100px width = 100px/></div>
-                <div>Pris: ${Model.input.productItems[index].price} kr</div>
-                <div>Tilgjengelig: ${Model.input.productItems[index].stock}</div>
-                ${checkstock}
-            </div>
-        </div>
-        `;
-    }
-    return showpro;
-}

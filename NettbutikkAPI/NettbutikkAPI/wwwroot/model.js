@@ -1,10 +1,14 @@
 let Model = {
     app: {
         category: [
-            "Food",
-            "Clothing",
-            "Office",
-            "Toy"
+            "Mat",
+            "Drikke",
+            "Klær",
+            "Kontor",
+            "Leker",
+            "Sport",
+            "Diverse",
+            "Alle"
         ],
         dropdown: {
             isOpen: false,
@@ -13,6 +17,9 @@ let Model = {
         },
         html: {
             productHtml: '',
+            storeItems: '',
+            categoryText: '',
+            quantity: ''
         },
         currentPages: [
             "Login",
@@ -20,10 +27,11 @@ let Model = {
             "Store",
             "Profile"
         ],
-        currentPage: "Employee"
+        currentPage: "Profile"
     },
     input: {
         errorMessage: '',
+        inputQty: 0,
         inputName: '',
         inputPrice: 0,
         inputCategory: '',

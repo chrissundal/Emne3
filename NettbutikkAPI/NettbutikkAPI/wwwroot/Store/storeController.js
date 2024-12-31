@@ -1,7 +1,8 @@
-function goToStore() {
+async function goToStore() {
     Model.app.currentPage = Model.app.currentPages[2];
-    resetSort();
-    updateView();
+    let user = await axios.get(`/users/${Model.currentUser.id}`);
+    Model.currentUser = user.data;
+    sortBy(7)
 }
 
 async function deleteCart() {
@@ -37,33 +38,37 @@ async function deleteItem(cartIndex) {
 
 function openCart() {
     Model.app.dropdown.isOpen = true;
-    resetSort();
     updateView();
 }
 
-async function addToCart(index) {
-    let product = Model.input.productItems[index];
+async function addToCart(itemId,input) {
+    let product = Model.input.productItems.find(p => p.id === itemId);
     let itemInCart = Model.currentUser.myCart.find(item => item.id === product.id);
     if (itemInCart) {
-        if (product.stock > 0) {
-            itemInCart.stock += 1;
-            product.stock -= 1;
+        if (Model.input.inputQty < product.stock) {
+            itemInCart.stock += Model.input.inputQty;
+            product.stock -= Model.input.inputQty;
+            await updateServerData(product)
+            await sortBy(input)
+            displaySuccessMessage(`${Model.input.inputQty} stk av ${product.nameOfProduct} er lagt til i handlekurven`)
         } else {
-            displayErrorMessage("Flere enn tilgjengelig");
+            displayErrorMessage("Ikke nok på lager");
             return;
         }
     } else {
-        if (product.stock > 0) {
-            let productToAdd = {...product, stock: 1};
+        if (Model.input.inputQty < product.stock) {
+            let productToAdd = {...product, stock: Model.input.inputQty};
             Model.currentUser.myCart.push(productToAdd);
-            product.stock -= 1;
+            product.stock -= Model.input.inputQty;
+            await updateServerData(product)
+            await sortBy(input)
+            displaySuccessMessage(`${Model.input.inputQty} stk av ${product.nameOfProduct} er lagt til i handlekurven`)
         } else {
-            displayErrorMessage("Ikke på lager");
+            displayErrorMessage("Ikke nok på lager");
             return;
         }
     }
-    await updateServerData(product)
-    updateView();
+    
 }
 
 async function updateServerData(product) {
@@ -112,11 +117,9 @@ function closePocket() {
     updateView();
 }
 
-
-
-
 function resetSort() {
     Model.app.html.productHtml = '';
+    Model.app.html.categoryText = '';
     updateView();
 }
 
@@ -127,4 +130,14 @@ function displayErrorMessage(message) {
         Model.input.errorMessage = '';
         updateView();
     }, 3000);
+}
+function displaySuccessMessage(message) {
+    Model.input.errorMessage = message;
+    Model.app.html.quantity = '';
+    Model.input.inputQty = 0;
+    updateView();
+    setTimeout(() => {
+        Model.input.errorMessage = '';
+        updateView();
+    }, 5000);
 }

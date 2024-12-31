@@ -29,4 +29,9 @@ public class Product
     {
         Id = allproductsCount;
     }
+
+    public void addStock(int stock)
+    {
+        Stock += stock;
+    }
 }
