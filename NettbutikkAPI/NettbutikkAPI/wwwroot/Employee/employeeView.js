@@ -66,8 +66,8 @@ function showSortButtonsAdmin()
                 <div class="orderItem">
                     <img src="${item.imageUrl}" alt="${item.nameOfProduct}" class="orderItemImage" />
                     <span>${item.nameOfProduct}</span>
-                    <span>Quantity: ${item.stock}</span>
-                    <span>Price: ${item.price} kr</span>
+                    <span>Antall: ${item.stock}</span>
+                    <span>Pris: ${item.price} kr</span>
                 </div>
             `;
      }
@@ -102,8 +102,8 @@ function showSortButtonsAdmin()
      for (let item of result) {
          let setInventory = Model.app.dropdown.editMode === item.nameOfProduct ?
              `<input type="number" placeholder="Nytt antall" onInput="Model.input.inputStock=this.value"/> 
-             <button onclick="addInventoryAdmin(${item.id},${input})">Confirm</button>` :
-             `<button class="addInventoryBtn" onclick="Model.app.dropdown.editMode='${item.nameOfProduct}'; sortByCategoryAdmin(${input})">Add inventory</button>`;
+             <button onclick="addInventoryAdmin(${item.id},${input})">Bekreft</button>` :
+             `<button class="addInventoryBtn" onclick="Model.app.dropdown.editMode='${item.nameOfProduct}'; sortByCategoryAdmin(${input})">Sett antall</button>`;
          productHtml += `
             <tr class="productRow">
                 <td>${item.nameOfProduct}</td>
@@ -112,7 +112,7 @@ function showSortButtonsAdmin()
                 <td>${item.stock}</td>
                 <td>
                     ${setInventory}
-                    <button class="deleteItemBtn" style="background-color: red" onclick="deleteItemAdmin(${item.id},${input})">Delete item</button>
+                    <button class="deleteItemBtn" style="background-color: red" onclick="deleteItemAdmin(${item.id},${input})">Slett produkt</button>
                 </td>
             </tr>
         `;

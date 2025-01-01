@@ -2,9 +2,15 @@ async function goToStore() {
     Model.app.currentPage = Model.app.currentPages[2];
     let user = await axios.get(`/users/${Model.currentUser.id}`);
     Model.currentUser = user.data;
-    sortBy(7)
+    Model.app.html.quantity = '';
+    await sortBy(7)
 }
-
+async function fromSignupToStore() {
+    Model.app.currentPage = Model.app.currentPages[2];
+    let user = await axios.get(`/users/${Model.currentUser}`);
+    Model.currentUser = user.data;
+    await sortBy(7)
+}
 async function deleteCart() {
     for (let itemInCart of Model.currentUser.myCart) {
         let product = Model.input.productItems.find(p => p.id === itemInCart.id);
@@ -129,7 +135,7 @@ function displayErrorMessage(message) {
     setTimeout(() => {
         Model.input.errorMessage = '';
         updateView();
-    }, 3000);
+    }, 5000);
 }
 function displaySuccessMessage(message) {
     Model.input.errorMessage = message;

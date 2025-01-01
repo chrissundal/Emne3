@@ -25,7 +25,8 @@ let Model = {
             "Login",
             "Employee",
             "Store",
-            "Profile"
+            "Profile",
+            "Register"
         ],
         currentPage: "Profile"
     },
@@ -65,7 +66,7 @@ let Model = {
         id: 0,
         myCart: [],
         isEmployee: true,
-    },
+    }
 }
 
 
