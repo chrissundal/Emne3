@@ -39,9 +39,21 @@
                 <div class="myGrid">
                     ${createSquaresHtml()}
                 </div>
+                    <input type="number" placeholder="Index" oninput="model.test=this.valueAsNumber">
+                    <input type="text" placeholder="Text" oninput="model.testtext=this.value">
+                    <button onclick="SetPutTest()">endre test</button>
             `;
     }
-
+    async function SetPutTest() {
+        let updatedtextObject = {
+            index: model.test,
+            text: model.testtext,
+            foreColor: "green",
+            backColor: "white",
+        }
+        await axios.put(`/textObjects/${updatedtextObject.index}`, updatedtextObject);
+        await init();
+    }
     function createSquaresHtml() {
         let html = '';
         for (let index = 0; index < 64; index++) {
@@ -103,12 +115,12 @@
         ) return;
         /*model.textObjects.push({ ...inputs, index });*/
         model.inputs = {
+            text: null,
             foreColor: null,
             backColor: null,
-            text: null,
         };
         //sende data til API
-        const newtextObject = {...inputs, index};
+        const newtextObject = {index, ...inputs};
         let response = await axios.post('/textObjects', newtextObject);
 
         //oppdatere alt
@@ -118,10 +130,12 @@
 
     async function init() {
         model = {
+            test: null,
+            testtext: null,
             inputs: {
+                text: null,
                 foreColor: null,
                 backColor: null,
-                text: null,
             },
             colors: ["black", "white", "gray", "silver", "maroon", "red", "purple", "fushsia", "green", "lime", "olive", "yellow", "navy", "blue", "teal", "aqua"],
             textObjects: [

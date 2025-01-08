@@ -1,33 +1,34 @@
-using System.Text.Json;
+
 using ClaimTheSquare.Model;
+using Dapper;
+using Microsoft.Data.SqlClient;
 
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
-var dataManager = new DataManager();
-List<TextObjects> textObjects;
-
-if (File.Exists("textobjects.json"))
+var connStr = "Data Source=(localdb)\\local;Initial Catalog=ClaimTheSquare;Integrated Security=True";
+app.MapGet("/textObjects", async () =>
 {
-    var json = File.ReadAllText("textobjects.json");
-    textObjects = JsonSerializer.Deserialize<List<TextObjects>>(json);
-}
-else
-{
-    textObjects = dataManager.GetTextObjects();
-}
-
-app.MapGet("/textObjects", () => textObjects);
-
-app.MapPost("/textObjects", (TextObjects newTextObject) =>
-{
-    textObjects.Add(newTextObject);
-    var json = JsonSerializer.Serialize(textObjects);
-    File.WriteAllText("textobjects.json", json);
-    return Results.Ok(newTextObject);
+    var sql = "SELECT * FROM TextObject";
+    var conn = new SqlConnection(connStr);
+    var textObjects = await conn.QueryAsync<TextObjects>(sql);
+    return textObjects;
 });
 
+app.MapPost("/textObjects", async (TextObjects newTextObject) =>
+{
+    var sql = "INSERT INTO TextObject VALUES (@Index, @Text, @ForeColor, @BackColor)";
+    var conn = new SqlConnection(connStr);
+    var rowsAffected = await conn.ExecuteAsync(sql, newTextObject);
+    return rowsAffected;
+});
+app.MapPut("/textObjects/{index:int}", async (TextObjects updatedTextObject) =>
+{
+    var sql = "UPDATE TextObject SET Text = @Text, ForeColor = @ForeColor, BackColor = @BackColor WHERE [Index] = @Index";
+    var conn = new SqlConnection(connStr);
+    var rowsAffected = await conn.ExecuteAsync(sql, updatedTextObject);
+    return rowsAffected;
+});
 app.Run();
